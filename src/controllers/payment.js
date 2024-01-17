@@ -1,12 +1,9 @@
-import express, { response } from "express";
 import midtransClient from "midtrans-client";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const router = express.Router();
-
-router.post("/process-transaction", (req, res) => {
+export const handleMidtransPayment = async (req, res) => {
     try {
         const snap = new midtransClient.Snap({
             isProduction: false,
@@ -43,6 +40,4 @@ router.post("/process-transaction", (req, res) => {
             message: error.message,
         });
     }
-});
-
-export default router;
+};
