@@ -9,6 +9,8 @@ const Home = () => {
 
     const [token, setToken] = useState("");
 
+    localStorage.setItem("token", token);
+
     const process = async () => {
         const data = {
             name,
@@ -24,7 +26,7 @@ const Home = () => {
         };
 
         const response = await axios.post(
-            "http://localhost:9000/api/payment/process-transaction",
+            "http://localhost:9000/process-transaction",
             data,
             config
         );
@@ -40,7 +42,7 @@ const Home = () => {
                         "Pembayaran anda Success",
                         JSON.stringify(result)
                     );
-                    setToken("");
+                    // setToken("");
                     alert("Success");
                 },
                 onPending: (result) => {
@@ -48,17 +50,17 @@ const Home = () => {
                         "Pembayaran anda Pending",
                         JSON.stringify(result)
                     );
-                    setToken("");
+                    // setToken("");
                     alert("Pending");
                 },
                 onError: (error) => {
                     console.log(error);
-                    setToken("");
+                    // setToken("");
                     alert("Error");
                 },
                 onClose: () => {
                     console.log("Anda Belum Menyelesaikan Pembayaran");
-                    setToken("");
+                    // setToken("");
                     alert("Close");
                 },
             });
@@ -84,6 +86,18 @@ const Home = () => {
             document.body.removeChild(scriptTag);
         };
     }, []);
+
+    const tokenPay = localStorage.getItem("token");
+
+    function showHandler() {
+        window.snap.pay(tokenPay, {
+            onSuccess: () => {
+                localStorage.setItem("token", "");
+                // setToken("");
+                alert("Success Pembayaran");
+            },
+        });
+    }
 
     return (
         <Box
@@ -118,6 +132,11 @@ const Home = () => {
             />
             <Box>
                 <Button onClick={process} variant="outlined">
+                    Proses
+                </Button>
+            </Box>
+            <Box>
+                <Button onClick={showHandler} variant="outlined">
                     Proses
                 </Button>
             </Box>
